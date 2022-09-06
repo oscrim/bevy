@@ -34,6 +34,7 @@ use winit::{
     dpi::{LogicalSize, PhysicalPosition},
     event::{self, DeviceEvent, Event, StartCause, WindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopWindowTarget},
+    window::CursorGrabMode,
 };
 
 #[derive(Default)]
@@ -137,9 +138,19 @@ fn change_window(
                 }
                 bevy_window::WindowCommand::SetCursorLockMode { locked } => {
                     let window = winit_windows.get_window(id).unwrap();
-                    window
-                        .set_cursor_grab(locked)
-                        .unwrap_or_else(|e| error!("Unable to un/grab cursor: {}", e));
+                    match locked {
+                        true => {
+                            window
+                                .set_cursor_grab(CursorGrabMode::Confined)
+                                .or_else(|_e| window.set_cursor_grab(CursorGrabMode::Locked))
+                                .unwrap_or_else(|e| error!("Unable to un/grab cursor: {}", e));
+                        }
+                        false => {
+                            window
+                                .set_cursor_grab(CursorGrabMode::None)
+                                .unwrap_or_else(|e| error!("Unable to un/grab cursor: {}", e));
+                        }
+                    }
                 }
                 bevy_window::WindowCommand::SetCursorVisibility { visible } => {
                     let window = winit_windows.get_window(id).unwrap();

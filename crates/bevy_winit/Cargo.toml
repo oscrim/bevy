@@ -35,5 +35,5 @@ crossbeam-channel = "0.5"
 [package.metadata.docs.rs]
 features = ["x11"]
 
-[patch.crates-io]
-winit = {path="../../../winit"}
+#[patch.crates-io]
+#winit = {path="../../../winit"}

@@ -68,6 +68,9 @@ pub struct AssetPlugin {
     /// Whether to watch for changes in asset files. Requires the `filesystem_watcher` feature,
     /// and cannot be supported on the wasm32 arch nor android os.
     pub watch_for_changes: bool,
+    #[cfg(target_arch = "wasm32")]
+    /// The wasm options
+    pub headers: String,
 }
 
 impl Default for AssetPlugin {
@@ -75,6 +78,8 @@ impl Default for AssetPlugin {
         Self {
             asset_folder: "assets".to_string(),
             watch_for_changes: false,
+            #[cfg(target_arch = "wasm32")]
+            headers: String::new(),
         }
     }
 }

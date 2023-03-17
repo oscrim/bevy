@@ -6,9 +6,9 @@ use std::{
     convert::TryFrom,
     path::{Path, PathBuf},
 };
-use wasm_bindgen::JsCast;
+use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
-use web_sys::Response;
+use web_sys::{RequestInit, Response};
 
 /// I/O implementation for web builds.
 ///
@@ -22,6 +22,7 @@ use web_sys::Response;
 /// [fetch()]: https://developer.mozilla.org/en-US/docs/Web/API/fetch
 pub struct WasmAssetIo {
     root_path: PathBuf,
+    headers: String,
 }
 
 impl WasmAssetIo {
@@ -29,6 +30,16 @@ impl WasmAssetIo {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         WasmAssetIo {
             root_path: path.as_ref().to_owned(),
+            headers: String::new(),
+        }
+    }
+
+    /// Creates a new `WasmAssetIo`. The path provided will be used to build URLs to query for assets.
+    /// The headers will be used for the query
+    pub fn new_with_headers<P: AsRef<Path>>(path: P, headers: String) -> Self {
+        WasmAssetIo {
+            root_path: path.as_ref().to_owned(),
+            headers,
         }
     }
 }
@@ -37,10 +48,14 @@ impl AssetIo for WasmAssetIo {
     fn load_path<'a>(&'a self, path: &'a Path) -> BoxedFuture<'a, Result<Vec<u8>, AssetIoError>> {
         Box::pin(async move {
             let path = self.root_path.join(path);
+            let mut request_init = RequestInit::new();
+            request_init.headers(&JsValue::from_str(&self.headers));
             let window = web_sys::window().unwrap();
-            let resp_value = JsFuture::from(window.fetch_with_str(path.to_str().unwrap()))
-                .await
-                .unwrap();
+            let resp_value = JsFuture::from(
+                window.fetch_with_str_and_init(path.to_str().unwrap(), &request_init),
+            )
+            .await
+            .unwrap();
             let resp: Response = resp_value.dyn_into().unwrap();
             let data = JsFuture::from(resp.array_buffer().unwrap()).await.unwrap();
             let bytes = Uint8Array::new(&data).to_vec();

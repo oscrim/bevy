@@ -41,16 +41,15 @@ const STANDARD_MATERIAL_FLAGS_SPECULAR_TRANSMISSION_TEXTURE_BIT: u32 = 1024u;
 const STANDARD_MATERIAL_FLAGS_THICKNESS_TEXTURE_BIT: u32          = 2048u;
 const STANDARD_MATERIAL_FLAGS_DIFFUSE_TRANSMISSION_TEXTURE_BIT: u32 = 4096u;
 const STANDARD_MATERIAL_FLAGS_ATTENUATION_ENABLED_BIT: u32        = 8192u;
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_RESERVED_BITS: u32       = 3758096384u; // (0b111u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_OPAQUE: u32              = 0u;          // (0u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_MASK: u32                = 536870912u;  // (1u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_BLEND: u32               = 1073741824u; // (2u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_PREMULTIPLIED: u32       = 1610612736u; // (3u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_ADD: u32                 = 2147483648u; // (4u32 << 29)
-const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_MULTIPLY: u32            = 2684354560u; // (5u32 << 29)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_RESERVED_BITS: u32       = 57344u; // (0b111u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_OPAQUE: u32              = 0u;     // (0u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_MASK: u32                = 8192u;  // (1u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_BLEND: u32               = 16384u; // (2u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_PREMULTIPLIED: u32       = 24576u; // (3u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_ADD: u32                 = 32768u; // (4u32 << 13)
+const STANDARD_MATERIAL_FLAGS_ALPHA_MODE_MULTIPLY: u32            = 40960u; // (5u32 << 13)
 // ↑ To calculate/verify the values above, use the following playground:
-// https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=7792f8dd6fc6a8d4d0b6b1776898a7f4
-
+// https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=719ddb77b3eae865e162521c5a6e7dfe
 
 // Creates a StandardMaterial with default values
 fn standard_material_new() -> StandardMaterial {
